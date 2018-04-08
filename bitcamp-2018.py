@@ -1,6 +1,5 @@
 import csv
 import sys
-import re
 
 #create the list to store companies
 company_list = []
@@ -70,17 +69,23 @@ with open('/Users/dirtydan/Github/personal-projects/bitcamp-2018/emissions_data.
                     company_list[i].dec_rate()
                 else:
                     company_list[i].big_dec(3)
+                company_list[i].update_field('emissions', row[7])
 
 
-
+# retrieves forestry data i.e. forest risk assessment
 with open('/Users/dirtydan/Github/personal-projects/bitcamp-2018/forest_data.csv') as f:
     reader = csv.reader(f)
     for i, j in enumerate(company_list):
-        if j.__dict__['name'] == row[0] and not 'No risk' in row[8]:
-            (company_list[i].dec_rate()).dec_rate()
-            company_list[i].update_field('forestry', row[8])
+        if j.__dict__['name'] == row[0] and row[6]:
+            if 'Yes' in row[6]:
+                company_list[i].big_dec(2)
+            elif 'Partial' in row[6]:
+                company_list[i].dec_rate()
+            else:
+                company_list[i].big_inc(2)
 
 
+# pop the "organizations" label off the list
 company_list.pop(0)
 
 
