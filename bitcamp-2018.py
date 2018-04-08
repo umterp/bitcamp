@@ -6,15 +6,10 @@ import urllib.request
 from urllib.request import urlopen
 import urllib.error
 from bs4 import BeautifulSoup
-import mysql.connector as sql
-
+from sqlalchemy import Table, Column, Integer, String, ForeignKey
 
 
 company_list = []
-
-# ge_url  = "https://www.epa.gov/greenpower/green-power-partnership-national-top-100"
-# ge_page = urlopen(ge_url)
-# soup = BeautifulSoup(ge_page, 'html.parser')
 
 class Company:
 
@@ -24,6 +19,14 @@ class Company:
         self.values = {}
         # self.record_values = record_values
 
+
+    def inc_rate(self):
+        if self.rate < 10:
+            self.rate = self.rate + 1
+
+    def dec_rate(self):
+        if self.rate >= 1:
+            self.rate = self.rate - 1
 
     def update_field(self, key, val):
         self.values[key] = val
@@ -36,7 +39,7 @@ class Company:
 with open('/Users/dirtydan/Github/personal-projects/bitcamp-2018/water_data.csv', 'r') as f:
     reader = csv.reader(f)
     for row in reader:
-        if row[6] != 'No':
+        if 'No' in row[6]:
             new_company = Company(row[0])
             new_company.update_field('water policy', 'Yes')
             company_list.append(new_company)
@@ -65,8 +68,45 @@ company_list.pop(0)
 
 df = pd.DataFrame(company_list)
 
-cnx = sql.connect(user='cmudd@bitcamp-2018', database='bitcamp-2018')
-cnx = MySQLConnection(user='cmudd@bitcamp-2018', database='bitcamp-2018')
+import sqlalchemy
+
+def connect(user, password, db, host='localhost', port=5432):
+    '''Returns a connection and a metadata object'''
+    # We connect with the help of the PostgreSQL URL
+    # postgresql://federer:grandestslam@localhost:5432/tennis
+    url = 'postgresql://{}:{}@{}:{}/{}'
+    url = url.format(user, password, host, port, db)
+
+    # The return value of create_engine() is our connection object
+    con = sqlalchemy.create_engine(url, client_encoding='utf8')
+
+    # We then bind the connection to MetaData()
+    meta = sqlalchemy.MetaData(bind=con, reflect=True)
+
+    return con, meta
+
+con, meta = connect('cmudd', 'password', 'bitcamp2018')
+print(con)
+print(meta)
+
+
+
+companies = Table('companies', meta,
+    Column('name', String),
+    Column('rating', String)
+)
+
+companies= {'extend_existing': True}
+
+# Create the above tables
+meta.create_all(con)
+
+for i in company_list:
+    clause = companies.insert().values(name=company_list[i].name, rating='United Kingdom')
+    con.execute(clause)
+
+# cnx = sql.connect(user='cmudd', database='bitcamp-2018', password='1g#ydOjWQHh', host='bitcamp-2018.mysql.database.azure.com')
+#cnx = MySQLConnection(user='root', database='bitcamp-2018', password='1g#ydOjWQHh', host='bitcamp-2018.mysql.database.azure.com')
 
 
 print(list(map(lambda x: x.__dict__, company_list)))
