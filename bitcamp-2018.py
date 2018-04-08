@@ -1,12 +1,14 @@
 import csv
 import sys
-import numpy as np
 import pandas as pd
+from pandas.io import sql
 import urllib.request
 from urllib.request import urlopen
 import urllib.error
 from bs4 import BeautifulSoup
-import mysql
+import mysql.connector as sql
+
+
 
 company_list = []
 
@@ -60,4 +62,11 @@ with open('/Users/dirtydan/Github/personal-projects/bitcamp-2018/forest_data.csv
 
 
 company_list.pop(0)
+
+df = pd.DataFrame(company_list)
+
+cnx = sql.connect(user='cmudd@bitcamp-2018', database='bitcamp-2018')
+cnx = MySQLConnection(user='cmudd@bitcamp-2018', database='bitcamp-2018')
+
+
 print(list(map(lambda x: x.__dict__, company_list)))
