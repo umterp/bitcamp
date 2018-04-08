@@ -3,12 +3,106 @@
 
 <head>
 	<title>Company Ratings</title>
+	    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600i" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 100px;
+        }
+
+        table,
+        th,
+        td {
+            border: none;
+        }
+
+        .logo {
+            position: relative;
+            width: 100px;
+            left: 14.5%;
+            padding-top: 40px;
+        }
+
+        .title {
+            position: relative;
+            left: 14.5%;
+        }
+
+        .content {
+            padding: 16px;
+        }
+
+        .sticky {
+            position: fixed;
+            top: 0;
+            width: 100%
+        }
+
+
+        .sticky+.content {
+            padding-top: 102px;
+        }
+
+        td {
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+
+        tr:nth-child(odd) {
+            background: #F5F5F5;
+            line-height: 20px;
+        }
+
+        tr:nth-child(even) {
+            background: none;
+        }
+
+        tr:first-child {
+            background: #34A7FF;
+            color: white;
+            line-height: 30px;
+        }
+
+        td:nth-child(3) {
+            width: 200px;
+        }
+
+        td {
+            padding-left: 10px;
+            padding-right: 30px;
+        }
+
+    </style>
+
+    <script>
+        var header = document.getElementById("myHeader");
+
+        var sticky = header.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+        }
+
+    </script>
+
 </head>
 
 <body>
-<h1>Company Ratings</h1>
-<table border = "1">
-<tr><td>Name</td><td>Rating</td><td>Emissions Grade</td><td>Water Policy?</td></tr>
+<img class="logo" src="eko_monogram.png">
+    <h1 class="title">Company Ratings</h1>
+    <table border="1">
+        <tr class="header" id="myHeader">
+<td>Name</td><td>Rating</td><td>Emissions Grade</td><td>Water Policy?</td></tr>
 <tr><td>3M Company</td><td>4</td><td>D</td><td>Yes</td></tr>
 <tr><td>3Y</td><td>4</td><td>unknown</td><td>No</td></tr>
 <tr><td>A & R GROUP</td><td>4</td><td>unknown</td><td>No</td></tr>
